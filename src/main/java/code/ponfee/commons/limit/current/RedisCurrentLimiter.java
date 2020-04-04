@@ -19,11 +19,13 @@ import code.ponfee.commons.cache.CacheBuilder;
 import code.ponfee.commons.concurrent.AsyncBatchTransmitter;
 import code.ponfee.commons.jedis.JedisClient;
 import code.ponfee.commons.jedis.JedisLock;
-import code.ponfee.commons.util.Bytes;
-import code.ponfee.commons.util.IdWorker;
+import code.ponfee.commons.util.ObjectUtils;
 
 /**
- * Redis限流器
+ * Redis限流器，滑动窗口/漏斗/令牌桶
+ *   1、Zset
+ *   2、incrBy CURRENT_UNIX_TIME
+ *   3、List
  *
  * @author Ponfee
  */
@@ -74,9 +76,7 @@ public class RedisCurrentLimiter implements CurrentLimiter {
             Map<byte[], Double> batch;
             for (Trace trace : traces) {
                 batch = groups.computeIfAbsent(trace.key, k -> new HashMap<>());
-                // ObjectUtils.uuid22()
-                // Long.toString(IdWorker.LOCAL_WORKER.nextId(), Character.MAX_RADIX)
-                batch.put(Bytes.toBytes(IdWorker.LOCAL_WORKER.nextId()), trace.timeMillis);
+                batch.put(ObjectUtils.uuid(), trace.timeMillis);
             }
 
             /*for (Entry<String, Map<byte[], Double>> entry : groups.entrySet()) {
@@ -144,7 +144,7 @@ public class RedisCurrentLimiter implements CurrentLimiter {
                     long now = System.currentTimeMillis();
                     // load the freq from cache, if not hit then calculate by redis zcount
                     count = countByRangeMillis(key, now - millis, now);
-                    countCache.set(key0, count);
+                    countCache.put(key0, count);
                 }
             }
         }
@@ -167,7 +167,7 @@ public class RedisCurrentLimiter implements CurrentLimiter {
         boolean flag = jedisClient.valueOps().setLong(THRESHOLD_KEY_PREFIX + key,
                                                       threshold, EXPIRE_SECONDS);
         if (flag) {
-            confCache.set(key, threshold); // refresh key value
+            confCache.put(key, threshold); // refresh key value
         }
 
         return flag;
@@ -189,7 +189,7 @@ public class RedisCurrentLimiter implements CurrentLimiter {
                     if (threshold == null) {
                         threshold = -1L; // -1表示无限制
                     }
-                    confCache.set(key, threshold); // put into local cache
+                    confCache.put(key, threshold); // put into local cache
                 }
             }
         }

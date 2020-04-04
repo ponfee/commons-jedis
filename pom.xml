@@ -9,10 +9,6 @@
   <version>${publish.version}</version>
   <name>commons-es</name>
 
-  <properties>
-    <spring.version>4.3.26.RELEASE</spring.version>
-  </properties>
-
   <!-- clean deploy -Dmaven.test.skip=true -P env -->
   <profiles>
     <profile>
@@ -54,7 +50,7 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-test</artifactId>
-      <version>${spring.version}</version>
+      <version>4.3.26.RELEASE</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -167,4 +163,5 @@
     </dependency>
 
   </dependencies>
+
 </project>
