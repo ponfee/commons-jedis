@@ -43,7 +43,7 @@
   </bean>
 
   <bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
-    <property name="password" value="mnWcasH5zN5bncE57pBz" />
+    <property name="password" value="" />
     <property name="usePool" value="true" />
     <property name="poolConfig" ref="jedisPoolConfig"></property>
     <constructor-arg ref="redisSentinelConfiguration" />
