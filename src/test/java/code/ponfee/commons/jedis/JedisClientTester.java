@@ -22,10 +22,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.google.common.collect.Lists;
 
-import bean.TestBean;
 import code.ponfee.commons.collect.ByteArrayWrapper;
 import code.ponfee.commons.io.Files;
-import code.ponfee.commons.jedis.JedisClient;
 import code.ponfee.commons.util.Bytes;
 import code.ponfee.commons.util.MavenProjects;
 import code.ponfee.commons.util.ObjectUtils;
