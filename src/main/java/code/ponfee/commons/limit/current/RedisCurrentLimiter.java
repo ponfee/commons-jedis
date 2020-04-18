@@ -19,8 +19,7 @@ import code.ponfee.commons.cache.CacheBuilder;
 import code.ponfee.commons.concurrent.AsyncBatchTransmitter;
 import code.ponfee.commons.jedis.JedisClient;
 import code.ponfee.commons.jedis.JedisLock;
-import code.ponfee.commons.util.Bytes;
-import code.ponfee.commons.util.IdWorker;
+import code.ponfee.commons.util.ObjectUtils;
 
 /**
  * Redis限流器
@@ -74,9 +73,7 @@ public class RedisCurrentLimiter implements CurrentLimiter {
             Map<byte[], Double> batch;
             for (Trace trace : traces) {
                 batch = groups.computeIfAbsent(trace.key, k -> new HashMap<>());
-                // ObjectUtils.uuid22()
-                // Long.toString(IdWorker.LOCAL_WORKER.nextId(), Character.MAX_RADIX)
-                batch.put(Bytes.toBytes(IdWorker.LOCAL_WORKER.nextId()), trace.timeMillis);
+                batch.put(ObjectUtils.uuid(), trace.timeMillis);
             }
 
             /*for (Entry<String, Map<byte[], Double>> entry : groups.entrySet()) {
