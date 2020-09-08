@@ -22,7 +22,10 @@ import code.ponfee.commons.jedis.JedisLock;
 import code.ponfee.commons.util.ObjectUtils;
 
 /**
- * Redis限流器
+ * Redis限流器，滑动窗口/漏斗/令牌桶
+ *   1、Zset
+ *   2、incrBy CURRENT_UNIX_TIME
+ *   3、List
  *
  * @author Ponfee
  */
@@ -141,7 +144,7 @@ public class RedisCurrentLimiter implements CurrentLimiter {
                     long now = System.currentTimeMillis();
                     // load the freq from cache, if not hit then calculate by redis zcount
                     count = countByRangeMillis(key, now - millis, now);
-                    countCache.set(key0, count);
+                    countCache.put(key0, count);
                 }
             }
         }
@@ -164,7 +167,7 @@ public class RedisCurrentLimiter implements CurrentLimiter {
         boolean flag = jedisClient.valueOps().setLong(THRESHOLD_KEY_PREFIX + key,
                                                       threshold, EXPIRE_SECONDS);
         if (flag) {
-            confCache.set(key, threshold); // refresh key value
+            confCache.put(key, threshold); // refresh key value
         }
 
         return flag;
@@ -186,7 +189,7 @@ public class RedisCurrentLimiter implements CurrentLimiter {
                     if (threshold == null) {
                         threshold = -1L; // -1表示无限制
                     }
-                    confCache.set(key, threshold); // put into local cache
+                    confCache.put(key, threshold); // put into local cache
                 }
             }
         }
