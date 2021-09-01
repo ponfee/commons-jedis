@@ -72,8 +72,8 @@ public class JedisLock implements Lock, java.io.Serializable {
         "if redis.call('get',KEYS[1])==ARGV[1] then return redis.call('del',KEYS[1]) else return 0 end;";
     private static final byte[] UNLOCK_SCRIPT_BYTES = UNLOCK_SCRIPT.getBytes();
 
-    private static final int MAX_TOMEOUT_SECONDS = 86400; // 最大超 时为1天
-    private static final int MIN_TOMEOUT_SECONDS = 1; // 最小超 时为1秒
+    private static final int MAX_TOMEOUT_SECONDS = 86400; // 最大超时为1天
+    private static final int MIN_TOMEOUT_SECONDS = 1; // 最小超时为1秒
     private static final int MIN_SLEEP_MILLIS = 7; // 最小休眠时间为7毫秒
     private static final byte[] KEY_PREFIX = "lock:".getBytes();
 
