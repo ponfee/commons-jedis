@@ -133,7 +133,7 @@ public class ShardedJedisSentinelPool extends Pool<ShardedJedis> {
                 builder.append(master.toString());
                 builder.append(" ");
             }
-            logger.info("Created ShardedJedisPool to master at [{}]", builder.toString());
+            logger.info("Created ShardedJedisPool to master at [{}]", builder);
             List<JedisShardInfo> shardMasters = makeShardInfoList(masters);
             super.initPool(poolConfig, new ShardedJedisFactory(shardMasters, Hashing.MURMUR_HASH, null));
             currentHostMasters = masters;
@@ -155,7 +155,7 @@ public class ShardedJedisSentinelPool extends Pool<ShardedJedis> {
     }
 
     private List<JedisShardInfo> makeShardInfoList(List<HostAndPort> masters) {
-        List<JedisShardInfo> shardMasters = new ArrayList<>();
+        List<JedisShardInfo> shardMasters = new ArrayList<>(masters.size());
         for (HostAndPort master : masters) {
             JedisShardInfo jedisShardInfo = new JedisShardInfo(master.getHost(), master.getPort(), timeout);
             jedisShardInfo.setPassword(password);
@@ -185,9 +185,8 @@ public class ShardedJedisSentinelPool extends Pool<ShardedJedis> {
 
                     Jedis jedis = null;
                     try {
-                        jedis = new Jedis(hap.getHost(), hap.getPort());
-                        master = masterMap.get(masterName);
-                        if (master == null) {
+                        if ((master = masterMap.get(masterName)) == null) {
+                            jedis = new Jedis(hap.getHost(), hap.getPort());
                             List<String> hostAndPort = jedis.sentinelGetMasterAddrByName(masterName);
                             if (hostAndPort != null && hostAndPort.size() > 0) {
                                 master = toHostAndPort(hostAndPort.toArray(new String[hostAndPort.size()]));
@@ -218,7 +217,7 @@ public class ShardedJedisSentinelPool extends Pool<ShardedJedis> {
                 }
 
                 if (null == master) {
-                    invalid = "{" + masterName + " " + sentinels.toString() + "}";
+                    invalid = "{" + masterName + " " + sentinels + "}";
                     try {
                         logger.warn("retry connect {}", invalid);
                         Thread.sleep(1000);
