@@ -7,7 +7,7 @@
   <artifactId>commons-jedis</artifactId>
   <packaging>jar</packaging>
   <version>${publish.version}</version>
-  <name>commons-es</name>
+  <name>commons-jedis</name>
 
   <!-- clean deploy -Dmaven.test.skip=true -P env -->
   <profiles>

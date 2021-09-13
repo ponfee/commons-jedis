@@ -6,7 +6,7 @@
 
     <properties>
         <property name="LOG_HOME">${log4j2.home:-logs}</property>
-        <property name="LOG_FILE_NAME">commons-es</property>
+        <property name="LOG_FILE_NAME">commons-jedis</property>
     </properties>
 
     <Appenders>
