@@ -11,7 +11,7 @@ import code.ponfee.commons.jedis.JedisClient;
  * 
  * @author Ponfee
  */
-public class RedisRequestLimiter extends RequestLimiter{
+public class RedisRequestLimiter extends RequestLimiter {
 
     private final JedisClient client;
 

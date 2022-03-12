@@ -11,6 +11,7 @@ package code.ponfee.commons.serial;
 import java.util.HashMap;
 import java.util.Map;
 
+import code.ponfee.commons.io.ByteOrderMarks;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -31,10 +32,8 @@ import code.ponfee.commons.serial.JsonSerializer;
 import code.ponfee.commons.serial.KryoSerializer;
 import code.ponfee.commons.serial.ProtostuffSerializer;
 import code.ponfee.commons.serial.Serializer;
-import code.ponfee.commons.serial.Serializers;
 import code.ponfee.commons.serial.ToStringSerializer;
 import code.ponfee.commons.serial.WrappedSerializer;
-import code.ponfee.commons.util.Convertors;
 import code.ponfee.commons.util.SecureRandoms;
 
 /**
@@ -67,7 +66,7 @@ public class SerialTest {
         //Assert.assertNotNull(serializer.deserialize(serializer.serialize(ByteArrayWrapper.of(SecureRandoms.nextBytes(10))), ByteArrayWrapper.class));
         //Assert.assertNotNull(serializer.deserialize(serializer.serialize(new Date()), Date.class));
         //Assert.assertNotNull(serializer.deserialize(serializer.serialize("abc"), String.class));
-        Assert.assertNotNull(serializer.deserialize(serializer.serialize(Serializers.BOOLEAN), Serializers.class));
+        Assert.assertNotNull(serializer.deserialize(serializer.serialize(ByteOrderMarks.UTF_8), ByteOrderMarks.class));
         //Assert.assertNotNull(serializer.deserialize(serializer.serialize(Result.SUCCESS), Result.class));
     }
 
@@ -254,9 +253,6 @@ public class SerialTest {
 
     @Test
     public void test7() {
-        System.out.println(Serializers.of(int.class));
-        System.out.println(Convertors.of(int.class));
-
         System.out.println(Integer.class.isInstance(1));
         System.out.println(Long.class.isInstance(1));
         System.out.println(Long.class.isInstance(1L));

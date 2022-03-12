@@ -1,6 +1,6 @@
 package code.ponfee.commons.wechat;
 
-import static code.ponfee.commons.concurrent.ThreadPoolExecutors.DISCARD_POLICY_SCHEDULER;
+import static code.ponfee.commons.concurrent.ThreadPoolExecutors.CALLER_RUN_SCHEDULER;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -67,7 +67,7 @@ public class WechatTokenManager implements DisposableBean {
         this.jedisClient = jedisClient;
 
         // refresh token from wechat schedule
-        DISCARD_POLICY_SCHEDULER.scheduleAtFixedRate(() -> {
+        CALLER_RUN_SCHEDULER.scheduleAtFixedRate(() -> {
             for (Wechat wechat : WECHAT_CONFIGS.values()) {
                 try {
                     refreshToken(wechat);
@@ -80,7 +80,7 @@ public class WechatTokenManager implements DisposableBean {
         }, 0, TOKEN_EXPIRE / 2 - 1, TimeUnit.SECONDS);
 
         // load token and ticket from redis cache schedule
-        DISCARD_POLICY_SCHEDULER.scheduleAtFixedRate(() -> {
+        CALLER_RUN_SCHEDULER.scheduleAtFixedRate(() -> {
             try {
                 for (Wechat wx : WECHAT_CONFIGS.values()) {
                     String accessToken = jedisClient.valueOps().get(wx.accessTokenKey);
