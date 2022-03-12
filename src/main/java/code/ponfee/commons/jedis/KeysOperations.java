@@ -73,7 +73,7 @@ public class KeysOperations extends JedisOperations {
 
     public boolean expireAt(String key, long unixTime) {
         return call(shardedJedis -> {
-            return Numbers.equals(shardedJedis.expireAt(key, unixTime), 1L);
+            return Numbers.equals(shardedJedis.expireAt(key, unixTime), 1);
         }, false, key, unixTime);
     }
 
@@ -91,7 +91,7 @@ public class KeysOperations extends JedisOperations {
 
     public boolean pexpireAt(String key, long millisTimestamp) {
         return call(shardedJedis -> {
-            return Numbers.equals(shardedJedis.pexpireAt(key, millisTimestamp), 1L);
+            return Numbers.equals(shardedJedis.pexpireAt(key, millisTimestamp), 1);
         }, false, key, millisTimestamp);
     }
 
